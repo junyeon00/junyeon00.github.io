@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Managed IPsec VPN 문의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        label .required {
+            color: #dc3545;
+        }
+        input[type="text"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            flex: 1;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            color: #6c757d;
+        }
+        .file-label:hover {
+            border-color: #667eea;
+            background: #e7f3ff;
+        }
+        .file-list {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .file-list.active {
+            display: block;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .file-item:last-child {
+            margin-bottom: 0;
+        }
+        .file-name {
+            font-size: 13px;
+            color: #495057;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .file-size {
+            font-size: 12px;
+            color: #6c757d;
+            margin: 0 10px;
+        }
+        .file-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .file-remove:hover {
+            background: #c82333;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        .loading.active {
+            display: block;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="form-section">
+            <h1>📝 Managed IPsec VPN 문의</h1>
+            <p class="subtitle">문의 정보를 입력해주세요.</p>
+            
+            <div class="error" id="error"></div>
+            
+            <form id="inquiryForm">
+                <div class="form-group">
+                    <label>문의자 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" placeholder="이름" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>전화번호 <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="01012345678" required pattern="[0-9]{10,11}">
+                </div>
+                
+                <div class="form-group">
+                    <label>고객사 <span class="required">*</span></label>
+                    <select id="customer" name="customer" required>
+                        <option value="">CRM을 기준으로 작성해주세요</option>
+                        <option value="바이올렛페이">바이올렛페이</option>
+                        <option value="코페이">코페이</option>
+                        <option value="AAI헬스케어">AAI헬스케어</option>
+                        <option value="론포인트">론포인트</option>
+                        <option value="sk일렉링크">sk일렉링크</option>
+                        <option value="나이스페이먼츠">나이스페이먼츠</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>장비명 <span class="required">*</span></label>
+                    <input type="text" id="deviceName" name="deviceName" placeholder="ex. Fortigate 80F" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>문의 유형 <span class="required">*</span></label>
+                    <select id="inquiryType" name="inquiryType" required>
+                        <option value="">Select an option ...</option>
+                        <option value="라우팅 변경 (기존 삭제 및 신규 추가)">라우팅 변경 (기존 삭제 및 신규 추가)</option>
+                        <option value="VPG old 사용 여부">VPG old 사용 여부</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>VPG Old 사용 여부</label>
+                    <select id="vpgOld" name="vpgOld">
+                        <option value="">Select an option ...</option>
+                        <option value="네">네</option>
+                        <option value="아니오">아니오</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>파일 첨부</label>
+                    <div class="file-upload">
+                        <div class="file-input-wrapper">
+                            <label for="fileInput" class="file-label">
+                                📎 파일 선택 (선택된 파일 없음)
+                            </label>
+                            <input type="file" id="fileInput" multiple accept="*/*">
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    제출하기
+                </button>
+            </form>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <h2>처리 중...</h2>
+            <p>AI가 문의 내용을 생성하고 있습니다</p>
+        </div>
+    </div>
+    
+    <script>
+        // 파일 관리
+        let selectedFiles = [];
+        
+        const fileInput = document.getElementById('fileInput');
+        const fileLabel = document.querySelector('.file-label');
+        const fileList = document.getElementById('fileList');
+        
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // 10MB 제한
+            const validFiles = files.filter(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`${file.name}은(는) 10MB를 초과합니다.`);
+                    return false;
+                }
+                return true;
+            });
+            
+            selectedFiles = [...selectedFiles, ...validFiles];
+            updateFileList();
+        });
+        
+        function updateFileList() {
+            if (selectedFiles.length === 0) {
+                fileLabel.textContent = '📎 파일 선택 (선택된 파일 없음)';
+                fileList.classList.remove('active');
+                fileList.innerHTML = '';
+                return;
+            }
+            
+            fileLabel.textContent = `📎 ${selectedFiles.length}개 파일 선택됨`;
+            fileList.classList.add('active');
+            fileList.innerHTML = selectedFiles.map((file, index) => `
+                <div class="file-item">
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${(file.size / 1024).toFixed(1)} KB</span>
+                    <button type="button" class="file-remove" onclick="removeFile(${index})">삭제</button>
+                </div>
+            `).join('');
+        }
+        
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+        }
+        
+        // Base64 변환
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // Form 제출
+        document.getElementById('inquiryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                문의자: document.getElementById('name').value,
+                전화번호: document.getElementById('phone').value,
+                고객사: document.getElementById('customer').value,
+                장비명: document.getElementById('deviceName').value,
+                문의유형: document.getElementById('inquiryType').value,
+                VPG_Old_사용여부: document.getElementById('vpgOld').value || '없음'
+            };
+            
+            // 유효성 검사
+            if (!formData.고객사) {
+                showError('고객사를 선택해주세요.');
+                return;
+            }
+            
+            if (!formData.문의유형) {
+                showError('문의 유형을 선택해주세요.');
+                return;
+            }
+            
+            // UI 변경
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                // 첨부파일 Base64 변환
+                const attachments = await Promise.all(
+                    selectedFiles.map(async file => ({
+                        filename: file.name,
+                        data: await fileToBase64(file),
+                        size: file.size,
+                        mimeType: file.type
+                    }))
+                );
+                
+                // n8n Webhook으로 전송
+                const response = await fetch('https://junyeon.n3works.co.kr/webhook-test/inquiry-form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...formData,
+                        파일첨부: attachments
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('서버 응답 오류');
+                }
+                
+                const result = await response.json();
+                
+                // Wait 페이지로 자동 리다이렉트
+                if (result.reviewUrl) {
+                    // 성공 메시지 잠깐 표시
+                    document.getElementById('loading').innerHTML = `
+                        <div class="success-icon" style="font-size: 60px; margin-bottom: 20px;">✅</div>
+                        <h2>본문 생성 완료!</h2>
+                        <p>검토 페이지로 이동합니다...</p>
+                    `;
+                    
+                    // 1초 후 리다이렉트
+                    setTimeout(() => {
+                        window.location.href = result.reviewUrl;
+                    }, 1000);
+                } else {
+                    alert('✅ 제출 완료!\n\n검토 페이지 URL을 확인하세요.');
+                    console.log('Review URL:', result);
+                    
+                    // UI 복원
+                    document.getElementById('form-section').style.display = 'block';
+                    document.getElementById('loading').classList.remove('active');
+                    document.getElementById('submitBtn').disabled = false;
+                }
+                
+            } catch (error) {
+                console.error('제출 오류:', error);
+                showError('제출 중 오류가 발생했습니다: ' + error.message);
+                document.getElementById('form-section').style.display = 'block';
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = '⚠️ ' + message;
+            errorDiv.classList.add('active');
+            setTimeout(() => {
+                errorDiv.classList.remove('active');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

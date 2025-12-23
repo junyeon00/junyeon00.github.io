@@ -405,8 +405,8 @@
                     }))
                 );
                 
-                // n8n Webhook으로 전송
-                const response = await fetch('https://junyeon.n3works.co.kr/webhook-test/inquiry-form', {
+                // n8n Webhook #1 호출 (입력 수신)
+                const response = await fetch('https://junyeon.n3works.co.kr/webhook-test/inquiry-input', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -414,8 +414,7 @@
                     body: JSON.stringify({
                         ...formData,
                         파일첨부: attachments
-                    }),
-                    redirect: 'follow'
+                    })
                 });
                 
                 if (!response.ok) {
@@ -424,11 +423,11 @@
                 
                 const result = await response.json();
                 
-                if (result.success && result.jobId) {
-                    // Review 페이지로 자동 리다이렉트!
-                    window.location.href = `https://junyeon.n3works.co.kr/review.html?jobId=${result.jobId}`;
+                if (result.success) {
+                    // 우분투 서버의 Review 페이지로 리다이렉트! ⭐
+                    window.location.href = 'https://junyeon.n3works.co.kr/review.html';
                 } else {
-                    throw new Error('jobId를 받지 못했습니다');
+                    throw new Error('서버 응답 오류');
                 }
                 
             } catch (error) {

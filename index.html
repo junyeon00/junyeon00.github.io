@@ -248,12 +248,12 @@
                     <label>고객사 <span class="required">*</span></label>
                     <select id="customer" name="customer" required>
                         <option value="">CRM을 기준으로 작성해주세요</option>
-                        <option value="바이올렛페이">바이올렛페이</option>
+                        <option value="바미플랫폼">바미플랫폼</option>
                         <option value="코페이">코페이</option>
-                        <option value="AAI헬스케어">AAI헬스케어</option>
-                        <option value="론포인트">론포인트</option>
-                        <option value="sk일렉링크">sk일렉링크</option>
-                        <option value="나이스페이먼츠">나이스페이먼츠</option>
+                        <option value="AA워스캐피탈">AA워스캐피탈</option>
+                        <option value="지엠이대부">지엠이대부</option>
+                        <option value="SK인포텍크">SK인포텍크</option>
+                        <option value="나이스피앤아이초록">나이스피앤아이초록</option>
                     </select>
                 </div>
                 
@@ -406,6 +406,9 @@
                 );
                 
                 // n8n Webhook으로 전송
+                // ⚠️ Redirect 방식: 서버가 자동으로 리다이렉트함!
+                // 로딩 화면이 보이다가 Wait 페이지로 자동 이동
+                
                 const response = await fetch('https://junyeon.n3works.co.kr/webhook-test/inquiry-form', {
                     method: 'POST',
                     headers: {
@@ -414,37 +417,12 @@
                     body: JSON.stringify({
                         ...formData,
                         파일첨부: attachments
-                    })
+                    }),
+                    redirect: 'follow'  // ⭐ 자동 리다이렉트 허용
                 });
                 
-                if (!response.ok) {
-                    throw new Error('서버 응답 오류');
-                }
-                
-                const result = await response.json();
-                
-                // Wait 페이지로 자동 리다이렉트
-                if (result.reviewUrl) {
-                    // 성공 메시지 잠깐 표시
-                    document.getElementById('loading').innerHTML = `
-                        <div class="success-icon" style="font-size: 60px; margin-bottom: 20px;">✅</div>
-                        <h2>본문 생성 완료!</h2>
-                        <p>검토 페이지로 이동합니다...</p>
-                    `;
-                    
-                    // 1초 후 리다이렉트
-                    setTimeout(() => {
-                        window.location.href = result.reviewUrl;
-                    }, 1000);
-                } else {
-                    alert('✅ 제출 완료!\n\n검토 페이지 URL을 확인하세요.');
-                    console.log('Review URL:', result);
-                    
-                    // UI 복원
-                    document.getElementById('form-section').style.display = 'block';
-                    document.getElementById('loading').classList.remove('active');
-                    document.getElementById('submitBtn').disabled = false;
-                }
+                // Redirect된 경우 자동으로 Wait 페이지로 이동
+                // 이 아래 코드는 실행되지 않음!
                 
             } catch (error) {
                 console.error('제출 오류:', error);

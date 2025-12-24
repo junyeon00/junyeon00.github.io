@@ -1,35 +1,105 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>문의 접수</title>
+<meta charset="UTF-8" />
+<title>Managed IPsec VPN 문의</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+body {
+  font-family: 'Segoe UI','Malgun Gothic',sans-serif;
+  background: linear-gradient(135deg,#667eea,#764ba2);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  background: #fff;
+  width: 600px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+h1 { text-align: center; margin-bottom: 20px; }
+label { display: block; margin-top: 15px; font-weight: 600; }
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+}
+button {
+  margin-top: 30px;
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  background: linear-gradient(135deg,#667eea,#764ba2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
 </head>
 <body>
-  <h2>문의 접수</h2>
+<div class="container">
+  <h1>📝 Managed IPsec VPN 문의</h1>
 
-  <input id="customer" placeholder="고객사" />
-  <br /><br />
-  <textarea id="prompt" placeholder="문의 요약"></textarea>
-  <br /><br />
-  <button onclick="submit()">제출</button>
+  <form id="form">
+    <label>문의자</label>
+    <input id="name" required />
 
-  <script>
-    async function submit() {
-      const res = await fetch("https://YOUR_N8N_DOMAIN/webhook/inquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customer: document.getElementById("customer").value,
-          prompt: document.getElementById("prompt").value,
-        }),
-      });
+    <label>전화번호</label>
+    <input id="phone" required />
 
-      const data = await res.json();
+    <label>고객사</label>
+    <input id="customer" required />
 
-      if (data.reviewUrl) {
-        window.location.href = data.reviewUrl;
-      }
+    <label>장비명</label>
+    <input id="device" required />
+
+    <label>문의 유형</label>
+    <select id="type" required>
+      <option value="">선택</option>
+      <option>라우팅 변경</option>
+      <option>라우팅 추가</option>
+      <option>VPG Old 여부</option>
+    </select>
+
+    <button type="submit">제출하기</button>
+  </form>
+</div>
+
+<script>
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const payload = {
+    name: name.value,
+    phone: phone.value,
+    customer: customer.value,
+    device: device.value,
+    type: type.value
+  };
+
+  const res = await fetch(
+    "https://junyeon.n3works.co.kr/webhook-test/inquiry-form",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     }
-  </script>
+  );
+
+  const data = await res.json();
+  if (!data.jobId) {
+    alert("jobId 수신 실패");
+    return;
+  }
+
+  // 관리자 검토 페이지로 이동
+  location.href = `/review.html?jobId=${data.jobId}`;
+});
+</script>
 </body>
 </html>

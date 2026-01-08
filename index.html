@@ -86,6 +86,21 @@
             resize: vertical;
             line-height: 1.6;
         }
+        
+        /* ⭐ 직접 입력 필드 스타일 */
+        .custom-input-group {
+            display: none;
+            margin-top: 10px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        .custom-input-group.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .file-upload {
             position: relative;
             display: inline-block;
@@ -266,14 +281,21 @@
                     <input type="text" id="deviceName" name="deviceName" placeholder="ex. Fortigate 80F" required>
                 </div>
                 
+                <!-- ⭐ 문의 유형 드롭다운 (직접 작성 옵션 추가) -->
                 <div class="form-group">
                     <label>문의 유형 <span class="required">*</span></label>
-                    <select id="inquiryType" name="inquiryType" required>
+                    <select id="inquiryType" name="inquiryType" required onchange="handleInquiryTypeChange()">
                         <option value="">Select an option ...</option>
                         <option value="라우팅 변경 (기존 삭제 및 신규 추가)">라우팅 변경 (기존 삭제 및 신규 추가)</option>
                         <option value="라우팅 해지">라우팅 해지</option>
                         <option value="신규 라우팅 추가">신규 라우팅 추가</option>
+                        <option value="CUSTOM">**직접 작성**</option>
                     </select>
+                    
+                    <!-- ⭐ 직접 입력 필드 (숨김) -->
+                    <div class="custom-input-group" id="customInquiryTypeGroup">
+                        <input type="text" id="customInquiryType" placeholder="문의 유형을 직접 입력하세요" maxlength="100">
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -312,6 +334,21 @@
     </div>
     
     <script>
+        // ⭐ 문의 유형 드롭다운 변경 핸들러
+        function handleInquiryTypeChange() {
+            const select = document.getElementById('inquiryType');
+            const customGroup = document.getElementById('customInquiryTypeGroup');
+            const customInput = document.getElementById('customInquiryType');
+            
+            if (select.value === 'CUSTOM') {
+                customGroup.classList.add('active');
+                customInput.focus();
+            } else {
+                customGroup.classList.remove('active');
+                customInput.value = '';
+            }
+        }
+        
         // 파일 관리
         let selectedFiles = [];
         
@@ -373,12 +410,27 @@
         document.getElementById('inquiryForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // ⭐ 문의 유형 가져오기 (직접 입력 처리)
+            const inquiryTypeSelect = document.getElementById('inquiryType');
+            const customInquiryTypeInput = document.getElementById('customInquiryType');
+            let finalInquiryType = '';
+            
+            if (inquiryTypeSelect.value === 'CUSTOM') {
+                finalInquiryType = customInquiryTypeInput.value.trim();
+                if (!finalInquiryType) {
+                    showError('문의 유형을 직접 입력해주세요.');
+                    return;
+                }
+            } else {
+                finalInquiryType = inquiryTypeSelect.value;
+            }
+            
             const formData = {
                 문의자: document.getElementById('name').value,
                 전화번호: document.getElementById('phone').value,
                 고객사: document.getElementById('customer').value,
                 장비명: document.getElementById('deviceName').value,
-                문의유형: document.getElementById('inquiryType').value,
+                문의유형: finalInquiryType,  // ⭐ 직접 입력값 포함
                 VPG_Old_사용여부: document.getElementById('vpgOld').value || '없음'
             };
             

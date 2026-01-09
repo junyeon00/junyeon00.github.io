@@ -608,18 +608,17 @@
                 
                 formData.VPG_Old_사용여부 = document.getElementById('routing_vpgOld').value;
                 
-                // 파일 처리 (공통 파일 업로드 사용)
+                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송
                 const fileInput = document.getElementById('commonFileUpload');
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     try {
                         const base64 = await convertToBase64(file);
-                        formData.첨부파일 = {
-                            이름: file.name,
-                            크기: file.size,
-                            타입: file.type,
-                            데이터: base64
-                        };
+                        // 배열 형태로 저장
+                        formData.파일첨부 = [{
+                            filename: file.name,
+                            data: base64
+                        }];
                     } catch (error) {
                         console.error('파일 변환 오류:', error);
                     }
@@ -675,18 +674,17 @@
                 formData.고객사 = company;
                 formData.장비명 = document.getElementById('tunneling_equipment').value.trim();
                 
-                // 파일 처리 (공통 파일 업로드 사용)
+                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송
                 const tunnelingFileInput = document.getElementById('commonFileUpload');
                 if (tunnelingFileInput.files.length > 0) {
                     const file = tunnelingFileInput.files[0];
                     try {
                         const base64 = await convertToBase64(file);
-                        formData.첨부파일 = {
-                            이름: file.name,
-                            크기: file.size,
-                            타입: file.type,
-                            데이터: base64
-                        };
+                        // 배열 형태로 저장
+                        formData.파일첨부 = [{
+                            filename: file.name,
+                            data: base64
+                        }];
                     } catch (error) {
                         console.error('파일 변환 오류:', error);
                     }
@@ -725,18 +723,17 @@
                 formData.고객사 = company;
                 formData.장비명 = document.getElementById('equipment_equipment').value.trim();
                 
-                // 파일 처리 (공통 파일 업로드 사용)
+                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송
                 const equipmentFileInput = document.getElementById('commonFileUpload');
                 if (equipmentFileInput.files.length > 0) {
                     const file = equipmentFileInput.files[0];
                     try {
                         const base64 = await convertToBase64(file);
-                        formData.첨부파일 = {
-                            이름: file.name,
-                            크기: file.size,
-                            타입: file.type,
-                            데이터: base64
-                        };
+                        // 배열 형태로 저장
+                        formData.파일첨부 = [{
+                            filename: file.name,
+                            data: base64
+                        }];
                     } catch (error) {
                         console.error('파일 변환 오류:', error);
                     }

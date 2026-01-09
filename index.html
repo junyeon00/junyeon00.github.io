@@ -160,11 +160,62 @@
             margin-right: 10px;
         }
 
+        .file-list {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .file-list.active {
+            display: block;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .file-item:last-child {
+            margin-bottom: 0;
+        }
+
         .file-name {
-            margin-top: 8px;
+            font-size: 13px;
+            color: #495057;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .file-size {
             font-size: 12px;
-            color: #666;
-            word-break: break-all;
+            color: #6c757d;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .file-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .file-remove:hover {
+            background: #c82333;
         }
 
         .submit-btn {
@@ -460,18 +511,18 @@
             <!-- 공통 파일 첨부 섹션 (모든 문의 유형에서 사용) -->
             <div id="fileUploadSection" style="display: none;">
                 <div class="form-group">
-                    <label for="commonFileUpload">파일 첨부</label>
+                    <label for="commonFileUpload">파일 첨부 (여러 개 선택 가능)</label>
                     <div class="file-upload">
-                        <input type="file" id="commonFileUpload" name="commonFileUpload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls">
+                        <input type="file" id="commonFileUpload" name="commonFileUpload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls" multiple>
                         <label for="commonFileUpload" class="file-upload-label">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="17 8 12 3 7 8"></polyline>
                                 <line x1="12" y1="3" x2="12" y2="15"></line>
                             </svg>
-                            <span>파일 선택 또는 드래그하여 업로드</span>
+                            <span id="fileUploadText">파일 선택 또는 드래그하여 업로드</span>
                         </label>
-                        <div class="file-name" id="commonFileName"></div>
+                        <div class="file-list" id="fileList"></div>
                     </div>
                 </div>
             </div>
@@ -531,15 +582,55 @@
             }
         });
 
-        // 파일 업로드 처리 (공통)
-        document.getElementById('commonFileUpload').addEventListener('change', function(e) {
-            const fileName = document.getElementById('commonFileName');
-            if (e.target.files.length > 0) {
-                fileName.textContent = e.target.files[0].name;
-            } else {
-                fileName.textContent = '';
-            }
+        // 파일 관리 (공통 - 다중 파일 지원)
+        let selectedFiles = [];
+        
+        const fileInput = document.getElementById('commonFileUpload');
+        const fileUploadText = document.getElementById('fileUploadText');
+        const fileListDiv = document.getElementById('fileList');
+        
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // 10MB 제한
+            const validFiles = files.filter(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`${file.name}은(는) 10MB를 초과합니다.`);
+                    return false;
+                }
+                return true;
+            });
+            
+            selectedFiles = [...selectedFiles, ...validFiles];
+            updateFileList();
+            
+            // input 초기화 (같은 파일 다시 선택 가능하도록)
+            e.target.value = '';
         });
+        
+        function updateFileList() {
+            if (selectedFiles.length === 0) {
+                fileUploadText.textContent = '파일 선택 또는 드래그하여 업로드';
+                fileListDiv.classList.remove('active');
+                fileListDiv.innerHTML = '';
+                return;
+            }
+            
+            fileUploadText.textContent = `📎 ${selectedFiles.length}개 파일 선택됨`;
+            fileListDiv.classList.add('active');
+            fileListDiv.innerHTML = selectedFiles.map((file, index) => `
+                <div class="file-item">
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${(file.size / 1024).toFixed(1)} KB</span>
+                    <button type="button" class="file-remove" onclick="removeFile(${index})">삭제</button>
+                </div>
+            `).join('');
+        }
+        
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+        }
 
         // 폼 제출 처리
         document.getElementById('inquiryForm').addEventListener('submit', async function(e) {
@@ -608,19 +699,23 @@
                 
                 formData.VPG_Old_사용여부 = document.getElementById('routing_vpgOld').value;
                 
-                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송
-                const fileInput = document.getElementById('commonFileUpload');
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    try {
-                        const base64 = await convertToBase64(file);
-                        // 배열 형태로 저장
-                        formData.파일첨부 = [{
-                            filename: file.name,
-                            data: base64
-                        }];
-                    } catch (error) {
-                        console.error('파일 변환 오류:', error);
+                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송 (다중 파일)
+                if (selectedFiles.length > 0) {
+                    const fileArray = [];
+                    for (let i = 0; i < selectedFiles.length; i++) {
+                        const file = selectedFiles[i];
+                        try {
+                            const base64 = await convertToBase64(file);
+                            fileArray.push({
+                                filename: file.name,
+                                data: base64
+                            });
+                        } catch (error) {
+                            console.error(`파일 변환 오류 (${file.name}):`, error);
+                        }
+                    }
+                    if (fileArray.length > 0) {
+                        formData.파일첨부 = fileArray;
                     }
                 }
             }
@@ -674,19 +769,23 @@
                 formData.고객사 = company;
                 formData.장비명 = document.getElementById('tunneling_equipment').value.trim();
                 
-                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송
-                const tunnelingFileInput = document.getElementById('commonFileUpload');
-                if (tunnelingFileInput.files.length > 0) {
-                    const file = tunnelingFileInput.files[0];
-                    try {
-                        const base64 = await convertToBase64(file);
-                        // 배열 형태로 저장
-                        formData.파일첨부 = [{
-                            filename: file.name,
-                            data: base64
-                        }];
-                    } catch (error) {
-                        console.error('파일 변환 오류:', error);
+                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송 (다중 파일)
+                if (selectedFiles.length > 0) {
+                    const fileArray = [];
+                    for (let i = 0; i < selectedFiles.length; i++) {
+                        const file = selectedFiles[i];
+                        try {
+                            const base64 = await convertToBase64(file);
+                            fileArray.push({
+                                filename: file.name,
+                                data: base64
+                            });
+                        } catch (error) {
+                            console.error(`파일 변환 오류 (${file.name}):`, error);
+                        }
+                    }
+                    if (fileArray.length > 0) {
+                        formData.파일첨부 = fileArray;
                     }
                 }
             }
@@ -723,19 +822,23 @@
                 formData.고객사 = company;
                 formData.장비명 = document.getElementById('equipment_equipment').value.trim();
                 
-                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송
-                const equipmentFileInput = document.getElementById('commonFileUpload');
-                if (equipmentFileInput.files.length > 0) {
-                    const file = equipmentFileInput.files[0];
-                    try {
-                        const base64 = await convertToBase64(file);
-                        // 배열 형태로 저장
-                        formData.파일첨부 = [{
-                            filename: file.name,
-                            data: base64
-                        }];
-                    } catch (error) {
-                        console.error('파일 변환 오류:', error);
+                // 파일 처리 (공통 파일 업로드 사용) - 배열 형태로 전송 (다중 파일)
+                if (selectedFiles.length > 0) {
+                    const fileArray = [];
+                    for (let i = 0; i < selectedFiles.length; i++) {
+                        const file = selectedFiles[i];
+                        try {
+                            const base64 = await convertToBase64(file);
+                            fileArray.push({
+                                filename: file.name,
+                                data: base64
+                            });
+                        } catch (error) {
+                            console.error(`파일 변환 오류 (${file.name}):`, error);
+                        }
+                    }
+                    if (fileArray.length > 0) {
+                        formData.파일첨부 = fileArray;
                     }
                 }
             }

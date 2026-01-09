@@ -343,22 +343,6 @@
                         <option value="아니오">아니오</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="routing_fileUpload">파일 첨부</label>
-                    <div class="file-upload">
-                        <input type="file" id="routing_fileUpload" name="routing_fileUpload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls">
-                        <label for="routing_fileUpload" class="file-upload-label">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                            <span>파일 선택 또는 드래그하여 업로드</span>
-                        </label>
-                        <div class="file-name" id="routing_fileName"></div>
-                    </div>
-                </div>
             </div>
 
             <!-- 터널링 문의 섹션 -->
@@ -473,6 +457,25 @@
                 </div>
             </div>
 
+            <!-- 공통 파일 첨부 섹션 (모든 문의 유형에서 사용) -->
+            <div id="fileUploadSection" style="display: none;">
+                <div class="form-group">
+                    <label for="commonFileUpload">파일 첨부</label>
+                    <div class="file-upload">
+                        <input type="file" id="commonFileUpload" name="commonFileUpload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls">
+                        <label for="commonFileUpload" class="file-upload-label">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>파일 선택 또는 드래그하여 업로드</span>
+                        </label>
+                        <div class="file-name" id="commonFileName"></div>
+                    </div>
+                </div>
+            </div>
+
             <button type="submit" class="submit-btn" id="submitBtn">
                 문의 제출하기
             </button>
@@ -488,14 +491,18 @@
             document.getElementById('routingSection').classList.remove('active');
             document.getElementById('tunnelingSection').classList.remove('active');
             document.getElementById('equipmentSection').classList.remove('active');
+            document.getElementById('fileUploadSection').style.display = 'none';
             
             // 선택된 섹션만 표시
             if (selectedType === 'routing') {
                 document.getElementById('routingSection').classList.add('active');
+                document.getElementById('fileUploadSection').style.display = 'block';
             } else if (selectedType === 'tunneling') {
                 document.getElementById('tunnelingSection').classList.add('active');
+                document.getElementById('fileUploadSection').style.display = 'block';
             } else if (selectedType === 'equipment') {
                 document.getElementById('equipmentSection').classList.add('active');
+                document.getElementById('fileUploadSection').style.display = 'block';
             }
         });
 
@@ -524,9 +531,9 @@
             }
         });
 
-        // 파일 업로드 처리
-        document.getElementById('routing_fileUpload').addEventListener('change', function(e) {
-            const fileName = document.getElementById('routing_fileName');
+        // 파일 업로드 처리 (공통)
+        document.getElementById('commonFileUpload').addEventListener('change', function(e) {
+            const fileName = document.getElementById('commonFileName');
             if (e.target.files.length > 0) {
                 fileName.textContent = e.target.files[0].name;
             } else {
@@ -601,8 +608,8 @@
                 
                 formData.VPG_Old_사용여부 = document.getElementById('routing_vpgOld').value;
                 
-                // 파일 처리
-                const fileInput = document.getElementById('routing_fileUpload');
+                // 파일 처리 (공통 파일 업로드 사용)
+                const fileInput = document.getElementById('commonFileUpload');
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     try {
@@ -667,6 +674,23 @@
                 formData.전화번호 = phone;
                 formData.고객사 = company;
                 formData.장비명 = document.getElementById('tunneling_equipment').value.trim();
+                
+                // 파일 처리 (공통 파일 업로드 사용)
+                const tunnelingFileInput = document.getElementById('commonFileUpload');
+                if (tunnelingFileInput.files.length > 0) {
+                    const file = tunnelingFileInput.files[0];
+                    try {
+                        const base64 = await convertToBase64(file);
+                        formData.첨부파일 = {
+                            이름: file.name,
+                            크기: file.size,
+                            타입: file.type,
+                            데이터: base64
+                        };
+                    } catch (error) {
+                        console.error('파일 변환 오류:', error);
+                    }
+                }
             }
             
             // 장비 문의 검증 및 데이터 수집
@@ -700,6 +724,23 @@
                 formData.전화번호 = phone;
                 formData.고객사 = company;
                 formData.장비명 = document.getElementById('equipment_equipment').value.trim();
+                
+                // 파일 처리 (공통 파일 업로드 사용)
+                const equipmentFileInput = document.getElementById('commonFileUpload');
+                if (equipmentFileInput.files.length > 0) {
+                    const file = equipmentFileInput.files[0];
+                    try {
+                        const base64 = await convertToBase64(file);
+                        formData.첨부파일 = {
+                            이름: file.name,
+                            크기: file.size,
+                            타입: file.type,
+                            데이터: base64
+                        };
+                    } catch (error) {
+                        console.error('파일 변환 오류:', error);
+                    }
+                }
             }
             
             // 제출 버튼 비활성화 및 로딩 표시

@@ -10,8 +10,9 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -19,163 +20,153 @@
             align-items: center;
             padding: 20px;
         }
+
         .container {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 600px;
             width: 100%;
             padding: 40px;
-            animation: slideIn 0.3s ease-out;
+            animation: slideIn 0.5s ease-out;
         }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(-30px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         h1 {
-            color: #333;
+            color: #667eea;
+            text-align: center;
             margin-bottom: 10px;
             font-size: 28px;
-            text-align: center;
         }
+
         .subtitle {
+            text-align: center;
             color: #666;
             margin-bottom: 30px;
-            text-align: center;
             font-size: 14px;
         }
+
         .form-group {
             margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-out;
         }
+
         label {
             display: block;
-            font-weight: 600;
-            color: #495057;
             margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
             font-size: 14px;
         }
-        label .required {
-            color: #dc3545;
+
+        .required {
+            color: #e74c3c;
+            margin-left: 4px;
         }
+
         input[type="text"],
         input[type="tel"],
-        textarea,
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: border-color 0.3s;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        input:focus,
-        textarea:focus,
-        select:focus {
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
         textarea {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
-            line-height: 1.6;
         }
-        
-        /* ⭐ 직접 입력 필드 스타일 */
-        .custom-input-group {
-            display: none;
-            margin-top: 10px;
-            animation: fadeIn 0.3s ease-in;
-        }
-        .custom-input-group.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+
         .file-upload {
             position: relative;
             display: inline-block;
             width: 100%;
         }
-        .file-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        input[type="file"] {
+
+        .file-upload input[type="file"] {
             display: none;
         }
-        .file-label {
-            flex: 1;
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 12px 15px;
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
             cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-            color: #6c757d;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
         }
-        .file-label:hover {
+
+        .file-upload-label:hover {
             border-color: #667eea;
-            background: #e7f3ff;
+            background: #f0f2ff;
         }
-        .file-list {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            display: none;
+
+        .file-upload-label svg {
+            margin-right: 10px;
         }
-        .file-list.active {
-            display: block;
-        }
-        .file-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px;
-            background: white;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-        .file-item:last-child {
-            margin-bottom: 0;
-        }
+
         .file-name {
-            font-size: 13px;
-            color: #495057;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .file-size {
+            margin-top: 8px;
             font-size: 12px;
-            color: #6c757d;
-            margin: 0 10px;
+            color: #666;
+            word-break: break-all;
         }
-        .file-remove {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .file-remove:hover {
-            background: #c82333;
-        }
+
         .submit-btn {
             width: 100%;
             padding: 15px;
@@ -186,322 +177,566 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
+
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
         .submit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
+
         .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-        .loading.active {
-            display: block;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            border-top-color: white;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin-right: 10px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
             display: none;
         }
-        .error.active {
+
+        .error-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .custom-input-group {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .custom-input-group.active {
             display: block;
         }
+
+        .inquiry-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .inquiry-section.active {
+            display: block;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .container {
-                padding: 25px;
+                padding: 30px 20px;
             }
+
             h1 {
                 font-size: 24px;
+            }
+
+            .submit-btn {
+                padding: 12px;
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="form-section">
-            <h1>📝 Managed IPsec VPN 문의</h1>
-            <p class="subtitle">문의 정보를 입력해주세요.</p>
-            
-            <div class="error" id="error"></div>
-            
-            <form id="inquiryForm">
+        <h1>Managed IPsec VPN 문의</h1>
+        <p class="subtitle">문의 유형을 선택하시고 필요한 정보를 입력해주세요</p>
+
+        <form id="inquiryForm">
+            <!-- 주요 문의 유형 선택 (최상단) -->
+            <div class="form-group">
+                <label for="mainInquiryType">
+                    문의 유형 선택<span class="required">*</span>
+                </label>
+                <select id="mainInquiryType" name="mainInquiryType" required>
+                    <option value="">선택해주세요</option>
+                    <option value="routing">라우팅 문의</option>
+                    <option value="tunneling">터널링 문의</option>
+                    <option value="equipment">장비 문의</option>
+                </select>
+                <div class="error-message" id="mainInquiryTypeError">문의 유형을 선택해주세요</div>
+            </div>
+
+            <!-- 라우팅 문의 섹션 -->
+            <div id="routingSection" class="inquiry-section">
                 <div class="form-group">
-                    <label>문의자 <span class="required">*</span></label>
-                    <input type="text" id="name" name="name" placeholder="이름" required>
+                    <label for="routing_inquirer">
+                        문의자<span class="required">*</span>
+                    </label>
+                    <input type="text" id="routing_inquirer" name="routing_inquirer" placeholder="이름을 입력하세요">
+                    <div class="error-message" id="routing_inquirerError">문의자 이름을 입력해주세요</div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>전화번호 <span class="required">*</span></label>
-                    <input type="tel" id="phone" name="phone" placeholder="01012345678" required pattern="[0-9]{10,11}">
+                    <label for="routing_phone">
+                        전화번호<span class="required">*</span>
+                    </label>
+                    <input type="tel" id="routing_phone" name="routing_phone" placeholder="010-1234-5678">
+                    <div class="error-message" id="routing_phoneError">전화번호를 입력해주세요</div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>고객사 <span class="required">*</span></label>
-                    <select id="customer" name="customer" required>
-                        <option value="">CRM을 기준으로 작성해주세요</option>
-                        <option value="바이올렛페이">바이올렛페이</option>
-                        <option value="코페이">코페이</option>
-                        <option value="AAI헬스케어">AAI헬스케어</option>
-                        <option value="론포인트">론포인트</option>
-                        <option value="SK일렉링크">SK일렉링크</option>
-                        <option value="지엠이대부">지엠이대부</option>
-                        <option value="섹타나인">섹타나인</option>
-                        <option value="보난자팩토리">보난자팩토리</option>
-                        <option value="머니무브">머니무브</option>
-                        <option value="미래에셋자산운용">미래에셋자산운용</option>
-                    </select>
+                    <label for="routing_company">
+                        고객사<span class="required">*</span>
+                    </label>
+                    <input type="text" id="routing_company" name="routing_company" placeholder="회사명을 입력하세요">
+                    <div class="error-message" id="routing_companyError">고객사를 입력해주세요</div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>장비명 <span class="required">*</span></label>
-                    <input type="text" id="deviceName" name="deviceName" placeholder="ex. Fortigate 80F" required>
+                    <label for="routing_equipment">
+                        장비명<span class="required">*</span>
+                    </label>
+                    <input type="text" id="routing_equipment" name="routing_equipment" placeholder="장비명을 입력하세요">
+                    <div class="error-message" id="routing_equipmentError">장비명을 입력해주세요</div>
                 </div>
-                
-                <!-- ⭐ 문의 유형 드롭다운 (직접 작성 옵션 추가) -->
+
                 <div class="form-group">
-                    <label>문의 유형 <span class="required">*</span></label>
-                    <select id="inquiryType" name="inquiryType" required onchange="handleInquiryTypeChange()">
-                        <option value="">Select an option ...</option>
+                    <label for="routing_inquiryType">
+                        문의 유형<span class="required">*</span>
+                    </label>
+                    <select id="routing_inquiryType" name="routing_inquiryType">
+                        <option value="">선택해주세요</option>
                         <option value="라우팅 변경 (기존 삭제 및 신규 추가)">라우팅 변경 (기존 삭제 및 신규 추가)</option>
                         <option value="라우팅 해지">라우팅 해지</option>
                         <option value="신규 라우팅 추가">신규 라우팅 추가</option>
-                        <option value="CUSTOM">**직접 작성**</option>
+                        <option value="직접작성">**직접 작성**</option>
                     </select>
-                    
-                    <!-- ⭐ 직접 입력 필드 (숨김) -->
-                    <div class="custom-input-group" id="customInquiryTypeGroup">
-                        <input type="text" id="customInquiryType" placeholder="문의 유형을 직접 입력하세요" maxlength="100">
+                    <div class="error-message" id="routing_inquiryTypeError">문의 유형을 선택해주세요</div>
+                </div>
+
+                <div class="custom-input-group" id="routing_customInput">
+                    <div class="form-group">
+                        <label for="routing_customInquiry">상세 문의 내용</label>
+                        <textarea id="routing_customInquiry" name="routing_customInquiry" placeholder="문의하실 내용을 자세히 입력해주세요"></textarea>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>VPG Old 사용 여부</label>
-                    <select id="vpgOld" name="vpgOld">
-                        <option value="">Select an option ...</option>
-                        <option value="네">네</option>
+                    <label for="routing_vpgOld">VPG Old 사용 여부</label>
+                    <select id="routing_vpgOld" name="routing_vpgOld">
+                        <option value="">선택해주세요</option>
+                        <option value="예">예</option>
                         <option value="아니오">아니오</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>파일 첨부</label>
+                    <label for="routing_fileUpload">파일 첨부</label>
                     <div class="file-upload">
-                        <div class="file-input-wrapper">
-                            <label for="fileInput" class="file-label">
-                                📎 파일 선택 (선택된 파일 없음)
-                            </label>
-                            <input type="file" id="fileInput" multiple accept="*/*">
-                        </div>
-                        <div class="file-list" id="fileList"></div>
+                        <input type="file" id="routing_fileUpload" name="routing_fileUpload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls">
+                        <label for="routing_fileUpload" class="file-upload-label">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>파일 선택 또는 드래그하여 업로드</span>
+                        </label>
+                        <div class="file-name" id="routing_fileName"></div>
                     </div>
                 </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    제출하기
-                </button>
-            </form>
-        </div>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <h2>제출 중...</h2>
-            <p>잠시만 기다려주세요</p>
-        </div>
-    </div>
-    
-    <script>
-        // ⭐ 문의 유형 드롭다운 변경 핸들러
-        function handleInquiryTypeChange() {
-            const select = document.getElementById('inquiryType');
-            const customGroup = document.getElementById('customInquiryTypeGroup');
-            const customInput = document.getElementById('customInquiryType');
-            
-            if (select.value === 'CUSTOM') {
-                customGroup.classList.add('active');
-                customInput.focus();
-            } else {
-                customGroup.classList.remove('active');
-                customInput.value = '';
-            }
-        }
-        
-        // 파일 관리
-        let selectedFiles = [];
-        
-        const fileInput = document.getElementById('fileInput');
-        const fileLabel = document.querySelector('.file-label');
-        const fileList = document.getElementById('fileList');
-        
-        fileInput.addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            
-            // 10MB 제한
-            const validFiles = files.filter(file => {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert(`${file.name}은(는) 10MB를 초과합니다.`);
-                    return false;
-                }
-                return true;
-            });
-            
-            selectedFiles = [...selectedFiles, ...validFiles];
-            updateFileList();
-        });
-        
-        function updateFileList() {
-            if (selectedFiles.length === 0) {
-                fileLabel.textContent = '📎 파일 선택 (선택된 파일 없음)';
-                fileList.classList.remove('active');
-                fileList.innerHTML = '';
-                return;
-            }
-            
-            fileLabel.textContent = `📎 ${selectedFiles.length}개 파일 선택됨`;
-            fileList.classList.add('active');
-            fileList.innerHTML = selectedFiles.map((file, index) => `
-                <div class="file-item">
-                    <span class="file-name">${file.name}</span>
-                    <span class="file-size">${(file.size / 1024).toFixed(1)} KB</span>
-                    <button type="button" class="file-remove" onclick="removeFile(${index})">삭제</button>
+            </div>
+
+            <!-- 터널링 문의 섹션 -->
+            <div id="tunnelingSection" class="inquiry-section">
+                <div class="form-group">
+                    <label for="tunneling_inquiryType">
+                        문의 유형<span class="required">*</span>
+                    </label>
+                    <select id="tunneling_inquiryType" name="tunneling_inquiryType">
+                        <option value="">선택해주세요</option>
+                        <option value="신규 터널링 신청">신규 터널링 신청</option>
+                        <option value="터널링 삭제">터널링 삭제</option>
+                    </select>
+                    <div class="error-message" id="tunneling_inquiryTypeError">문의 유형을 선택해주세요</div>
                 </div>
-            `).join('');
-        }
-        
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            updateFileList();
-        }
-        
-        // Base64 변환
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        // Form 제출
+
+                <div class="form-group">
+                    <label for="tunneling_inquirer">
+                        문의자<span class="required">*</span>
+                    </label>
+                    <input type="text" id="tunneling_inquirer" name="tunneling_inquirer" placeholder="이름을 입력하세요">
+                    <div class="error-message" id="tunneling_inquirerError">문의자 이름을 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tunneling_phone">
+                        전화번호<span class="required">*</span>
+                    </label>
+                    <input type="tel" id="tunneling_phone" name="tunneling_phone" placeholder="010-1234-5678">
+                    <div class="error-message" id="tunneling_phoneError">전화번호를 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tunneling_company">
+                        고객사<span class="required">*</span>
+                    </label>
+                    <input type="text" id="tunneling_company" name="tunneling_company" placeholder="회사명을 입력하세요">
+                    <div class="error-message" id="tunneling_companyError">고객사를 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tunneling_equipment">장비명</label>
+                    <input type="text" id="tunneling_equipment" name="tunneling_equipment" placeholder="장비명을 입력하세요">
+                </div>
+
+                <!-- 신규 터널링 신청 시 표시되는 필드 -->
+                <div class="custom-input-group" id="tunneling_connectionPoint">
+                    <div class="form-group">
+                        <label for="tunneling_connectionPointInput">
+                            연결 지점<span class="required">*</span>
+                        </label>
+                        <input type="text" id="tunneling_connectionPointInput" name="tunneling_connectionPointInput" placeholder="예: 이동의즐거움-기후행동기회소득(AXGATE) < > 인피아드(AXGATE)">
+                        <p class="info-text">연결할 두 지점을 입력해주세요</p>
+                        <div class="error-message" id="tunneling_connectionPointError">연결 지점을 입력해주세요</div>
+                    </div>
+                </div>
+
+                <!-- 터널링 삭제 시 표시되는 필드 -->
+                <div class="custom-input-group" id="tunneling_tunnelName">
+                    <div class="form-group">
+                        <label for="tunneling_tunnelNameInput">
+                            터널링 명칭<span class="required">*</span>
+                        </label>
+                        <input type="text" id="tunneling_tunnelNameInput" name="tunneling_tunnelNameInput" placeholder="예: 이씨뱅크(하나은행 펌뱅킹) 터널링">
+                        <p class="info-text">삭제할 터널링의 명칭을 입력해주세요</p>
+                        <div class="error-message" id="tunneling_tunnelNameError">터널링 명칭을 입력해주세요</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 장비 문의 섹션 -->
+            <div id="equipmentSection" class="inquiry-section">
+                <div class="form-group">
+                    <label for="equipment_inquiryType">
+                        문의 유형<span class="required">*</span>
+                    </label>
+                    <select id="equipment_inquiryType" name="equipment_inquiryType">
+                        <option value="">선택해주세요</option>
+                        <option value="신규 장비 신청">신규 장비 신청</option>
+                        <option value="장비 해지">장비 해지</option>
+                    </select>
+                    <div class="error-message" id="equipment_inquiryTypeError">문의 유형을 선택해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipment_inquirer">
+                        문의자<span class="required">*</span>
+                    </label>
+                    <input type="text" id="equipment_inquirer" name="equipment_inquirer" placeholder="이름을 입력하세요">
+                    <div class="error-message" id="equipment_inquirerError">문의자 이름을 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipment_phone">
+                        전화번호<span class="required">*</span>
+                    </label>
+                    <input type="tel" id="equipment_phone" name="equipment_phone" placeholder="010-1234-5678">
+                    <div class="error-message" id="equipment_phoneError">전화번호를 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipment_company">
+                        고객사<span class="required">*</span>
+                    </label>
+                    <input type="text" id="equipment_company" name="equipment_company" placeholder="회사명을 입력하세요">
+                    <div class="error-message" id="equipment_companyError">고객사를 입력해주세요</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipment_equipment">장비명</label>
+                    <input type="text" id="equipment_equipment" name="equipment_equipment" placeholder="장비명을 입력하세요">
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                문의 제출하기
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // 주요 문의 유형 변경 처리
+        document.getElementById('mainInquiryType').addEventListener('change', function() {
+            const selectedType = this.value;
+            
+            // 모든 섹션 숨기기
+            document.getElementById('routingSection').classList.remove('active');
+            document.getElementById('tunnelingSection').classList.remove('active');
+            document.getElementById('equipmentSection').classList.remove('active');
+            
+            // 선택된 섹션만 표시
+            if (selectedType === 'routing') {
+                document.getElementById('routingSection').classList.add('active');
+            } else if (selectedType === 'tunneling') {
+                document.getElementById('tunnelingSection').classList.add('active');
+            } else if (selectedType === 'equipment') {
+                document.getElementById('equipmentSection').classList.add('active');
+            }
+        });
+
+        // 라우팅 문의 - 직접 작성 처리
+        document.getElementById('routing_inquiryType').addEventListener('change', function() {
+            const customInput = document.getElementById('routing_customInput');
+            if (this.value === '직접작성') {
+                customInput.classList.add('active');
+            } else {
+                customInput.classList.remove('active');
+            }
+        });
+
+        // 터널링 문의 - 조건부 필드 표시
+        document.getElementById('tunneling_inquiryType').addEventListener('change', function() {
+            const connectionPoint = document.getElementById('tunneling_connectionPoint');
+            const tunnelName = document.getElementById('tunneling_tunnelName');
+            
+            connectionPoint.classList.remove('active');
+            tunnelName.classList.remove('active');
+            
+            if (this.value === '신규 터널링 신청') {
+                connectionPoint.classList.add('active');
+            } else if (this.value === '터널링 삭제') {
+                tunnelName.classList.add('active');
+            }
+        });
+
+        // 파일 업로드 처리
+        document.getElementById('routing_fileUpload').addEventListener('change', function(e) {
+            const fileName = document.getElementById('routing_fileName');
+            if (e.target.files.length > 0) {
+                fileName.textContent = e.target.files[0].name;
+            } else {
+                fileName.textContent = '';
+            }
+        });
+
+        // 폼 제출 처리
         document.getElementById('inquiryForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // ⭐ 문의 유형 가져오기 (직접 입력 처리)
-            const inquiryTypeSelect = document.getElementById('inquiryType');
-            const customInquiryTypeInput = document.getElementById('customInquiryType');
-            let finalInquiryType = '';
+            const submitBtn = document.getElementById('submitBtn');
+            const mainInquiryType = document.getElementById('mainInquiryType').value;
             
-            if (inquiryTypeSelect.value === 'CUSTOM') {
-                finalInquiryType = customInquiryTypeInput.value.trim();
-                if (!finalInquiryType) {
-                    showError('문의 유형을 직접 입력해주세요.');
-                    return;
-                }
-            } else {
-                finalInquiryType = inquiryTypeSelect.value;
+            // 에러 메시지 초기화
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            
+            // 주요 문의 유형 검증
+            if (!mainInquiryType) {
+                document.getElementById('mainInquiryTypeError').classList.add('show');
+                return;
             }
             
-            const formData = {
-                문의자: document.getElementById('name').value,
-                전화번호: document.getElementById('phone').value,
-                고객사: document.getElementById('customer').value,
-                장비명: document.getElementById('deviceName').value,
-                문의유형: finalInquiryType,  // ⭐ 직접 입력값 포함
-                VPG_Old_사용여부: document.getElementById('vpgOld').value || '없음'
+            let formData = {
+                주요문의유형: mainInquiryType === 'routing' ? '라우팅 문의' : 
+                             mainInquiryType === 'tunneling' ? '터널링 문의' : '장비 문의',
+                제출시간: new Date().toLocaleString('ko-KR')
             };
             
-            // 유효성 검사
-            if (!formData.고객사) {
-                showError('고객사를 선택해주세요.');
-                return;
+            let isValid = true;
+            
+            // 라우팅 문의 검증 및 데이터 수집
+            if (mainInquiryType === 'routing') {
+                const inquirer = document.getElementById('routing_inquirer').value.trim();
+                const phone = document.getElementById('routing_phone').value.trim();
+                const company = document.getElementById('routing_company').value.trim();
+                const equipment = document.getElementById('routing_equipment').value.trim();
+                const inquiryType = document.getElementById('routing_inquiryType').value;
+                
+                if (!inquirer) {
+                    document.getElementById('routing_inquirerError').classList.add('show');
+                    isValid = false;
+                }
+                if (!phone) {
+                    document.getElementById('routing_phoneError').classList.add('show');
+                    isValid = false;
+                }
+                if (!company) {
+                    document.getElementById('routing_companyError').classList.add('show');
+                    isValid = false;
+                }
+                if (!equipment) {
+                    document.getElementById('routing_equipmentError').classList.add('show');
+                    isValid = false;
+                }
+                if (!inquiryType) {
+                    document.getElementById('routing_inquiryTypeError').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                formData.문의자 = inquirer;
+                formData.전화번호 = phone;
+                formData.고객사 = company;
+                formData.장비명 = equipment;
+                formData.문의유형 = inquiryType;
+                
+                if (inquiryType === '직접작성') {
+                    formData.상세문의내용 = document.getElementById('routing_customInquiry').value.trim();
+                }
+                
+                formData.VPG_Old_사용여부 = document.getElementById('routing_vpgOld').value;
+                
+                // 파일 처리
+                const fileInput = document.getElementById('routing_fileUpload');
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    try {
+                        const base64 = await convertToBase64(file);
+                        formData.첨부파일 = {
+                            이름: file.name,
+                            크기: file.size,
+                            타입: file.type,
+                            데이터: base64
+                        };
+                    } catch (error) {
+                        console.error('파일 변환 오류:', error);
+                    }
+                }
             }
             
-            if (!formData.문의유형) {
-                showError('문의 유형을 선택해주세요.');
-                return;
+            // 터널링 문의 검증 및 데이터 수집
+            else if (mainInquiryType === 'tunneling') {
+                const inquiryType = document.getElementById('tunneling_inquiryType').value;
+                const inquirer = document.getElementById('tunneling_inquirer').value.trim();
+                const phone = document.getElementById('tunneling_phone').value.trim();
+                const company = document.getElementById('tunneling_company').value.trim();
+                
+                if (!inquiryType) {
+                    document.getElementById('tunneling_inquiryTypeError').classList.add('show');
+                    isValid = false;
+                }
+                if (!inquirer) {
+                    document.getElementById('tunneling_inquirerError').classList.add('show');
+                    isValid = false;
+                }
+                if (!phone) {
+                    document.getElementById('tunneling_phoneError').classList.add('show');
+                    isValid = false;
+                }
+                if (!company) {
+                    document.getElementById('tunneling_companyError').classList.add('show');
+                    isValid = false;
+                }
+                
+                // 조건부 필드 검증
+                if (inquiryType === '신규 터널링 신청') {
+                    const connectionPoint = document.getElementById('tunneling_connectionPointInput').value.trim();
+                    if (!connectionPoint) {
+                        document.getElementById('tunneling_connectionPointError').classList.add('show');
+                        isValid = false;
+                    }
+                    formData.연결지점 = connectionPoint;
+                } else if (inquiryType === '터널링 삭제') {
+                    const tunnelName = document.getElementById('tunneling_tunnelNameInput').value.trim();
+                    if (!tunnelName) {
+                        document.getElementById('tunneling_tunnelNameError').classList.add('show');
+                        isValid = false;
+                    }
+                    formData.터널링명칭 = tunnelName;
+                }
+                
+                if (!isValid) return;
+                
+                formData.문의유형 = inquiryType;
+                formData.문의자 = inquirer;
+                formData.전화번호 = phone;
+                formData.고객사 = company;
+                formData.장비명 = document.getElementById('tunneling_equipment').value.trim();
             }
             
-            // UI 변경
-            document.getElementById('form-section').style.display = 'none';
-            document.getElementById('loading').classList.add('active');
-            document.getElementById('submitBtn').disabled = true;
+            // 장비 문의 검증 및 데이터 수집
+            else if (mainInquiryType === 'equipment') {
+                const inquiryType = document.getElementById('equipment_inquiryType').value;
+                const inquirer = document.getElementById('equipment_inquirer').value.trim();
+                const phone = document.getElementById('equipment_phone').value.trim();
+                const company = document.getElementById('equipment_company').value.trim();
+                
+                if (!inquiryType) {
+                    document.getElementById('equipment_inquiryTypeError').classList.add('show');
+                    isValid = false;
+                }
+                if (!inquirer) {
+                    document.getElementById('equipment_inquirerError').classList.add('show');
+                    isValid = false;
+                }
+                if (!phone) {
+                    document.getElementById('equipment_phoneError').classList.add('show');
+                    isValid = false;
+                }
+                if (!company) {
+                    document.getElementById('equipment_companyError').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!isValid) return;
+                
+                formData.문의유형 = inquiryType;
+                formData.문의자 = inquirer;
+                formData.전화번호 = phone;
+                formData.고객사 = company;
+                formData.장비명 = document.getElementById('equipment_equipment').value.trim();
+            }
+            
+            // 제출 버튼 비활성화 및 로딩 표시
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span>제출 중...';
             
             try {
-                // 첨부파일 Base64 변환
-                const attachments = await Promise.all(
-                    selectedFiles.map(async file => ({
-                        filename: file.name,
-                        data: await fileToBase64(file),
-                        size: file.size,
-                        mimeType: file.type
-                    }))
-                );
-                
-                // n8n Webhook #1 호출 ⭐
                 const response = await fetch('https://junyeon.n3works.co.kr/webhook/inquiry-form', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        ...formData,
-                        파일첨부: attachments
-                    })
+                    body: JSON.stringify(formData)
                 });
                 
-                if (!response.ok) {
-                    throw new Error('서버 응답 오류');
-                }
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // ⭐ 즉시 Review 페이지로 리다이렉트!
+                if (response.ok) {
+                    alert('문의가 성공적으로 제출되었습니다.');
                     window.location.href = 'http://221.168.32.110:3000/review.html';
                 } else {
-                    throw new Error('서버 응답 오류');
+                    throw new Error('제출 실패');
                 }
-                
             } catch (error) {
                 console.error('제출 오류:', error);
-                showError('제출 중 오류가 발생했습니다: ' + error.message);
-                document.getElementById('form-section').style.display = 'block';
-                document.getElementById('loading').classList.remove('active');
-                document.getElementById('submitBtn').disabled = false;
+                alert('문의 제출 중 오류가 발생했습니다. 다시 시도해주세요.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '문의 제출하기';
             }
         });
         
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = '⚠️ ' + message;
-            errorDiv.classList.add('active');
-            setTimeout(() => {
-                errorDiv.classList.remove('active');
-            }, 5000);
+        // Base64 변환 함수
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
         }
     </script>
 </body>
